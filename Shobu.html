@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Democratic Shobu</title>
+<style>
+:root{--bg:#f1ebe0;--panel:#fffaf0;--p2:#f4ead8;--ink:#2a2118;--mute:#7a6a58;--ln:#d8c9b0;--bd:#b98a5a;--bl:#e8cfa6;--cell:rgba(0,0,0,.13);--hl:#e0a21c;--acc:#5b45d6;--rose:#d04a5e}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e1220;--panel:#161d33;--p2:#202a47;--ink:#f1ecdf;--mute:#9aa6c4;--ln:#2d3a5f;--bd:#4a3a2e;--bl:#7b6650;--cell:rgba(0,0,0,.35);--hl:#d9b25f;--acc:#7f6bff;--rose:#e86a82}}
+:root[data-theme="dark"]{--bg:#0e1220;--panel:#161d33;--p2:#202a47;--ink:#f1ecdf;--mute:#9aa6c4;--ln:#2d3a5f;--bd:#4a3a2e;--bl:#7b6650;--cell:rgba(0,0,0,.35);--hl:#d9b25f;--acc:#7f6bff;--rose:#e86a82}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;transition:background .3s,color .3s;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+header{max-width:1200px;margin:0 auto;padding:20px 18px 0;display:flex;justify-content:space-between;gap:14px;align-items:flex-start}
+h1{font:800 clamp(1.6rem,4vw,2.4rem)/1.1 Georgia,serif;margin:0}
+header p{margin:.4em 0 0;color:var(--mute);max-width:70ch;font-size:.92rem}
+.lay{display:grid;grid-template-columns:minmax(0,600px) minmax(0,1fr);gap:22px;max-width:1200px;margin:0 auto;padding:16px 18px 30px}
+@media(max-width:940px){.lay{grid-template-columns:1fr}}
+button,select{font:inherit;color:var(--ink);background:var(--p2);border:1px solid var(--ln);border-radius:8px;padding:7px 12px;cursor:pointer;transition:.15s}
+button:hover:not(:disabled){border-color:var(--hl)}button:disabled{opacity:.4;cursor:default}
+button.primary{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
+.st{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px}
+.pl{background:var(--panel);border:2px solid var(--ln);border-radius:10px;padding:8px 12px;display:flex;gap:10px;align-items:center;font-size:.86rem;transition:.2s}
+.pl.on{border-color:var(--hl);box-shadow:0 0 0 3px color-mix(in srgb,var(--hl) 25%,transparent)}
+.pl b{font:700 1rem Georgia,serif;display:block}.pl span{color:var(--mute)}
+.stone{border-radius:50%;background:radial-gradient(circle at 32% 28%,var(--s1),var(--s2) 70%);box-shadow:0 3px 5px rgba(0,0,0,.45)}
+.s1{--s1:#5d6076;--s2:#07080d}.s2{--s1:#fff;--s2:#c9bfa9}
+.pl .stone{width:26px;height:26px;flex:none}
+.zone{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--mute);text-align:center;margin:8px 0 4px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px}
+.bw{position:relative}.bw>i{position:absolute;top:-9px;left:10px;z-index:2;font:700 11px Georgia,serif;background:var(--panel);border:1px solid var(--ln);border-radius:9px;padding:0 8px;font-style:normal;color:var(--mute)}
+.board{aspect-ratio:1;display:grid;grid-template-columns:repeat(4,1fr);gap:3px;padding:6px;border-radius:12px;box-shadow:0 8px 20px rgba(0,0,0,.3)}
+.board.d{background:var(--bd)}.board.l{background:var(--bl)}
+.cell{position:relative;background:var(--cell);border-radius:6px;display:grid;place-items:center}
+.cell .stone{width:74%;height:74%}
+.cell.can{cursor:pointer;outline:2px solid color-mix(in srgb,var(--hl) 60%,transparent)}
+.cell.dest{cursor:pointer}.cell.dest::after{content:"";width:34%;height:34%;border-radius:50%;background:var(--hl);animation:p 1s infinite alternate}
+.cell.lf{box-shadow:inset 0 0 0 2px rgba(255,255,255,.35)}.cell.lt{box-shadow:inset 0 0 0 3px rgba(255,255,255,.7)}
+.cell.pf,.cell.af{outline:3px solid var(--hl)}.cell.pt::after,.cell.at::after{content:"";position:absolute;inset:8%;border-radius:50%;border:3px solid var(--hl)}
+.cell.at::after{border-color:var(--rose);border-style:dashed}.cell.po .stone{box-shadow:0 0 0 3px var(--rose)}
+@keyframes p{to{transform:scale(1.3);opacity:.6}}
+.ctl{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:14px;font-size:.88rem}
+label{display:flex;gap:6px;align-items:center;color:var(--mute)}
+.note{color:var(--mute);font-size:.84rem}
+.panel{background:var(--panel);border:1px solid var(--ln);border-radius:12px;padding:14px;min-height:420px}
+.tabs{display:flex;gap:6px;margin-bottom:10px}.tabs button{border-radius:14px;padding:4px 12px;font-size:.82rem}.tabs button.on{background:var(--acc);border-color:var(--acc);color:#fff}
+.tab{display:none;max-height:560px;overflow:auto}.tab.on{display:block}
+.opt{display:flex;gap:10px;width:100%;text-align:left;margin:6px 0;padding:8px 10px;border-radius:10px}
+.opt.on{border-color:var(--acc);background:color-mix(in srgb,var(--acc) 22%,var(--p2))}
+.lt2{flex:none;width:26px;height:26px;border-radius:50%;background:var(--acc);color:#fff;display:grid;place-items:center;font-weight:800;font-size:.85rem}
+.opt small{display:block;color:var(--mute);font-size:.78rem}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:3px}
+.act{display:flex;gap:8px;margin:10px 0}
+.ln{margin:3px 0;font-size:.86rem}.dim{color:var(--mute)}.chg{font-size:.7rem;padding:1px 6px;border-radius:9px;background:color-mix(in srgb,var(--hl) 30%,transparent);color:var(--hl)}.win{color:#2e9d6b;font-weight:700}
+.bn{margin:10px 0 0;padding:12px;border-radius:10px;background:var(--panel);border:2px solid var(--hl);text-align:center;display:none}.bn.on{display:block}.bn b{font:800 1.4rem Georgia,serif}
+.rules li{margin:.35em 0}.rules h3{font:700 1.05rem Georgia,serif;margin:.5em 0 .2em}
+</style></head><body>
+<header><div><h1>Democratic Shobu</h1><p>Real Shobu rules, but nobody decides alone. Your seven advisors put a ballot in front of you; the opposing council debates, changes its mind, and votes on every move using the program you choose.</p></div><button id="th">🌙 Dark</button></header>
+<div class="lay"><section>
+<div class="st" id="st"></div>
+<div class="zone">Council's home boards</div><div class="grid" id="b0"></div>
+<div class="zone">— your home boards —</div><div class="grid" id="b1"></div>
+<div class="bn" id="bn"></div>
+<div class="ctl"><label>Council program <select id="prog"></select></label><label>First move <select id="first"><option value="2">You</option><option value="1">Council</option></select></label><label><input type="checkbox" id="fast">Fast council</label><button id="nw">New game</button></div>
+<p class="note" id="pd"></p></section>
+<aside class="panel"><div class="tabs" id="tabs"><button data-t="ballot" class="on">Ballot</button><button data-t="debate">Debate</button><button data-t="rules">Rules</button></div>
+<div class="tab on" id="t-ballot"></div><div class="tab" id="t-debate"><p class="note">The council's debate appears here on its turn.</p></div>
+<div class="tab rules" id="t-rules"><h3>Shobu</h3><ul><li>Four 4×4 boards. You (ivory) start at the bottom, the council (dark) at the top, 4 stones per board.</li><li><b>Passive move</b> on one of your two home boards: slide a stone 1–2 squares in any of 8 directions. No pushing.</li><li><b>Aggressive move</b> with the identical direction and distance on a board of the <i>opposite shade</i> (either side of the table). You may push one enemy stone, never two or your own. A pushed stone moves one square on, or falls off the board.</li><li><b>Win</b> by clearing all enemy stones from any one board.</li></ul><h3>The democratic layer</h3><ul><li>Seven advisors, each with a temperament: Hawk hunts, Guardian protects, Strategist holds the centre, Mason avoids edges, Opportunist spots collapses, Trickster has hunches, Pragmatist balances.</li><li>On your turn they propose a ballot. Vote for an option, or <b>write in</b> any legal move yourself.</li><li>On the council's turn, advisors propose, can be swayed toward the leader, then the chosen program decides: plurality, Borda, approval, rotating dictator or lottery.</li></ul></div></aside></div>
+<script>
+const $=s=>document.querySelector(s),COL=[1,0,0,1],HOME={1:[0,1],2:[2,3]};
+const D=[];for(let a=-1;a<2;a++)for(let b=-1;b<2;b++)if(a||b)D.push([a,b]);
+const ib=(r,c)=>r>=0&&r<4&&c>=0&&c<4,lab=i=>'ABCD'[i>>4]+'abcd'[i&3]+(4-((i>>2)&3));
+const txt=m=>`${lab(m.pf)}→${lab(m.pt)}, then ${lab(m.af)}→${lab(m.at)}${m.po>=0?(m.pe<0?' ✕ejects':' ⇢pushes'):''}`;
+const ADV=[{n:'Hawk',c:'#e5534b',t:'hunts enemy stones',p:.35,w:[6,5,.5,.2,.3]},{n:'Guardian',c:'#4a9be0',t:'protects our boards',p:.6,w:[4,1,4,.5,1.5]},{n:'Strategist',c:'#35b36b',t:'holds the centre',p:.5,w:[4,2,2,1.4,.6]},{n:'Mason',c:'#e8a73a',t:'avoids the edges',p:.3,w:[3,1,3,.8,2.8]},{n:'Opportunist',c:'#a35be0',t:'smells a collapse',p:.5,w:[5,4,1,0,1]},{n:'Trickster',c:'#e0589a',t:'has a hunch',p:.7,w:[5,2,2,.5,.5],z:7},{n:'Pragmatist',c:'#4fc3d9',t:'is the safe choice',p:.55,w:[5,3,2.5,.7,1.2]}];
+const PROGS={plurality:['Plurality','Most first-choice votes wins.'],borda:['Borda count','Every rank on every ballot earns points.'],approval:['Approval','Approve every move nearly as good as your favourite.'],dictator:['Rotating dictator','One advisor decides alone each turn.'],lottery:['Lottery','A randomly drawn advisor\'s favourite is played.']};
+const init=()=>{const s=new Array(64).fill(0);for(let b=0;b<4;b++)for(let c=0;c<4;c++){s[b*16+c]=1;s[b*16+12+c]=2}return s};
+function gen(s,p){const q=3-p,out=[];
+ for(const pb of HOME[p])for(let i=0;i<16;i++){const pf=pb*16+i;if(s[pf]!==p)continue;const r=i>>2,c=i&3;
+  for(const[dr,dc]of D)for(let k=1;k<3;k++){let ok=1;for(let j=1;j<=k;j++){const R=r+dr*j,C=c+dc*j;if(!ib(R,C)||s[pb*16+R*4+C]){ok=0;break}}if(!ok)break;
+   const pt=pb*16+(r+dr*k)*4+c+dc*k;
+   for(let ab=0;ab<4;ab++){if(COL[ab]===COL[pb])continue;
+    for(let j=0;j<16;j++){const af=ab*16+j;if(s[af]!==p)continue;const r2=j>>2,c2=j&3;let opp=-1,bad=0;
+     for(let m=1;m<=k;m++){const R=r2+dr*m,C=c2+dc*m;if(!ib(R,C)){bad=1;break}const v=s[ab*16+R*4+C];if(v===p){bad=1;break}if(v===q){if(opp>=0){bad=1;break}opp=ab*16+R*4+C}}
+     if(bad)continue;const R=r2+dr*k,C=c2+dc*k;let pe=-2;
+     if(opp>=0){const R2=R+dr,C2=C+dc;if(ib(R2,C2)){if(s[ab*16+R2*4+C2])continue;pe=ab*16+R2*4+C2}else pe=-1}
+     out.push({pf,pt,af,at:ab*16+R*4+C,po:opp,pe})}}}}
+ return out}
+function apply(s,m,p){const t=s.slice();t[m.pf]=0;t[m.af]=0;if(m.po>=0)t[m.po]=0;t[m.pt]=p;if(m.pe>=0)t[m.pe]=3-p;t[m.at]=p;return t}
+function feats(s,p){let o=0,e=0,mo=4,me=4,cen=0,edg=0;
+ for(let b=0;b<4;b++){let a=0,d=0;for(let i=0;i<16;i++){const v=s[b*16+i];if(!v)continue;const ed=((i>>2)%3===0||(i&3)%3===0)?1:0;if(v===p){a++;cen+=1-ed;edg+=ed}else{d++;cen-=1-ed;edg-=ed}}o+=a;e+=d;mo=Math.min(mo,a);me=Math.min(me,d)}
+ return[o-e,4-me,mo,cen,-edg,me===0?1:0,mo===0?1:0]}
+function analyze(s,p){const mv=gen(s,p),F=mv.map(m=>feats(apply(s,m,p),p));
+ return{mv,sc:ADV.map(a=>F.map(f=>f[0]*a.w[0]+f[1]*a.w[1]+f[2]*a.w[2]+f[3]*a.w[3]+f[4]*a.w[4]+1000*(f[5]-f[6])+(a.z?Math.random()*a.z*3:0)+Math.random()*1e-3))}}
+const nz=sc=>sc.map(a=>{const lo=Math.min(...a),r=Math.max(...a)-lo||1;return a.map(x=>(x-lo)/r)});
+const why=(m,k)=>m.po>=0?(m.pe<0?'ejects an enemy stone':'shoves an enemy stone'):ADV[k].t;
+function council(s,turn,pr){const{mv,sc}=analyze(s,1),n=mv.length,nm=nz(sc);
+ const rk=nm.map(a=>[...a.keys()].sort((x,y)=>a[y]-a[x])),props=rk.map(r=>r[0]),tot=i=>nm.reduce((t,a)=>t+a[i],0),cn=new Array(n).fill(0);props.forEach(i=>cn[i]++);
+ let lead=0;for(let i=1;i<n;i++)if(cn[i]>cn[lead]||(cn[i]===cn[lead]&&cn[i]&&tot(i)>tot(lead)))lead=i;
+ const ch=ADV.map((a,k)=>{if(rk[k][0]===lead)return 0;if(Math.random()<a.p*(nm[k][lead]>=.7?1:.12)){rk[k].splice(rk[k].indexOf(lead),1);rk[k].unshift(lead);return 1}return 0});
+ const fin=rk.map(r=>r[0]),me=new Array(n).fill(0);let d=turn%7,lb;
+ if(pr==='plurality'){fin.forEach(i=>me[i]++);lb=x=>x+'/7 votes'}
+ else if(pr==='borda'){rk.forEach(r=>r.forEach((x,i)=>me[x]+=n-1-i));lb=x=>x+' Borda points'}
+ else if(pr==='approval'){nm.forEach(a=>a.forEach((x,i)=>{if(x>=.9)me[i]++}));lb=x=>x+'/7 approvals'}
+ else{if(pr==='lottery')d=Math.random()*7|0;me[fin[d]]=1;lb=()=>pr==='lottery'?'lottery drew '+ADV[d].n:ADV[d].n+' decides alone'}
+ let win=0;for(let i=1;i<n;i++)if(me[i]>me[win]||(me[i]===me[win]&&tot(i)>tot(win)))win=i;
+ return{mv,props,fin,ch,win,me,lb}}
+let G={};
+function tab(t){document.querySelectorAll('.tab').forEach(e=>e.classList.toggle('on',e.id==='t-'+t));document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t))}
+$('#tabs').onclick=e=>{if(e.target.dataset.t)tab(e.target.dataset.t)};
+function hlm(){const h={},add=(i,c)=>{if(i>=0)h[i]=(h[i]||'')+' '+c};
+ if(G.last){add(G.last.pf,'lf');add(G.last.pt,'lt');add(G.last.af,'lf');add(G.last.at,'lt')}
+ const m=G.pick;if(m){add(m.pf,'pf');add(m.pt,'pt');add(m.af,'af');add(m.at,'at');add(m.po,'po')}
+ const W=G.W;if(W&&G.mv){if(W.f==null)G.mv.forEach(x=>add(x.pf,'can'));else if(W.t==null){add(W.f,'pf');G.mv.filter(x=>x.pf===W.f).forEach(x=>add(x.pt,'dest'))}else{add(W.f,'pf');add(W.t,'pt');G.mv.filter(x=>x.pf===W.f&&x.pt===W.t).forEach(x=>add(x.af,'can'))}}
+ return h}
+function render(){const h=hlm();
+ for(let g=0;g<2;g++)$('#b'+g).innerHTML=[0,1].map(k=>{const b=g*2+k;return`<div class="bw"><i>Board ${'ABCD'[b]}</i><div class="board ${COL[b]?'d':'l'}">${[...Array(16).keys()].map(i=>{const v=G.s[b*16+i];return`<div class="cell${h[b*16+i]||''}" data-i="${b*16+i}">${v?`<div class="stone s${v}"></div>`:''}</div>`}).join('')}</div></div>`}).join('');
+ $('#st').innerHTML=[2,1].map(p=>{let n=0,mn=4;for(let b=0;b<4;b++){let a=0;for(let i=0;i<16;i++)if(G.s[b*16+i]===p)a++;n+=a;mn=Math.min(mn,a)}return`<div class="pl ${G.turn===p&&!G.over?'on':''}"><div class="stone s${p}"></div><div><b>${p===2?'You (ivory)':'Council (dark)'}</b><span>${n} stones · weakest board ${mn}</span></div></div>`}).join('');
+ const bn=$('#bn');bn.className='bn'+(G.over?' on':'');if(G.over)bn.innerHTML=`<b>${G.over===2?'🏆 You win!':'🏛️ The council wins'}</b><p class="note">${G.why}</p><button class="primary" onclick="newGame()">Play again</button>`;
+ const W=G.W,hint=!W?'':W.f==null?'Write-in: click one of your highlighted stones.':W.t==null?'Now click a gold dot to slide it.':'Finally click the stone that copies the move on the opposite shade.';
+ $('#t-ballot').innerHTML=G.opts&&!G.over?`<p class="note">Your advisors propose. Pick one and cast your vote, or write in your own move. The preview shows on the board: gold = passive, dashed red = aggressive.</p>${G.opts.map((o,i)=>`<button class="opt ${G.pick===o.m?'on':''}" data-i="${i}"><span class="lt2">${'ABCDE'[i]}</span><span><b>${txt(o.m)}</b> ${o.adv.map(k=>`<span class="dot" style="background:${ADV[k].c}"></span>`).join('')}<small>${(o.adv.length?o.adv:[6]).slice(0,2).map(k=>ADV[k].n+': '+why(o.m,k)).join(' · ')}</small></span></button>`).join('')}<div class="act"><button id="wi">${W?'Cancel write-in':'Write-in…'}</button><button class="primary" id="cast" ${G.pick?'':'disabled'}>Cast my vote</button></div><p class="note">${hint}${G.pick&&!G.opts.some(o=>o.m===G.pick)?'Write-in: '+txt(G.pick):''}</p>`:'<p class="note">'+(G.over?'Game over.':'Waiting for the council…')+'</p>'}
+$('#t-ballot').onclick=e=>{const o=e.target.closest('.opt');if(o){G.pick=G.opts[+o.dataset.i].m;G.W=null;return render()}
+ if(e.target.id==='wi'){G.W=G.W?null:{};G.pick=null;render()}
+ if(e.target.id==='cast'&&G.pick){const m=G.pick;G.opts=null;G.pick=null;G.W=null;doMove(m,2)}};
+document.querySelectorAll('.grid').forEach(g=>g.onclick=e=>{const c=e.target.closest('.cell');if(!c||!G.W||G.turn!==2||G.over)return;const i=+c.dataset.i,W=G.W,mv=G.mv;
+ if(W.f==null){if(mv.some(m=>m.pf===i))W.f=i}
+ else if(W.t==null){if(mv.some(m=>m.pf===W.f&&m.pt===i))W.t=i;else if(mv.some(m=>m.pf===i))W.f=i;else G.W={}}
+ else{const m=mv.find(m=>m.pf===W.f&&m.pt===W.t&&m.af===i);if(m){G.pick=m;G.W=null}}
+ render()});
+function doMove(m,p){G.s=apply(G.s,m,p);G.last=m;G.n++;const q=3-p;
+ if([0,1,2,3].some(b=>{for(let i=0;i<16;i++)if(G.s[b*16+i]===q)return false;return true}))return finish(p,'All enemy stones were cleared from a board.');
+ G.turn=q;render();G.tm=setTimeout(start,p===2?350:500)}
+function finish(w,y){G.over=w;G.why=y;render()}
+function start(){if(G.over)return;const mv=gen(G.s,G.turn);if(!mv.length)return finish(3-G.turn,(G.turn===2?'You':'The council')+' had no legal move.');G.turn===2?ballot():councilTurn()}
+function ballot(){tab('ballot');const{mv,sc}=analyze(G.s,2),n=mv.length,nm=nz(sc),g={};
+ nm.forEach((a,k)=>{const m=a.indexOf(Math.max(...a));(g[m]=g[m]||[]).push(k)});
+ const tot=i=>nm.reduce((t,a)=>t+a[i],0);let L=Object.keys(g).map(Number).sort((a,b)=>g[b].length-g[a].length||tot(b)-tot(a));
+ for(const i of[...Array(n).keys()].sort((a,b)=>tot(b)-tot(a))){if(L.length>=4)break;if(!L.includes(i))L.push(i)}
+ G.mv=mv;G.pick=null;G.W=null;G.opts=L.slice(0,5).map(i=>({m:mv[i],adv:g[i]||[]}));render()}
+function councilTurn(){tab('debate');const pr=$('#prog').value,R=council(G.s,G.n,pr),M=i=>txt(R.mv[i]),L=[],nm=k=>`<b style="color:${ADV[k].c}">${ADV[k].n}</b>`;
+ L.push('<div class="ln dim">The council convenes…</div>');
+ ADV.forEach((a,k)=>L.push(`<div class="ln">${nm(k)} proposes ${M(R.props[k])} <span class="dim">— ${why(R.mv[R.props[k]],k)}</span></div>`));
+ L.push(`<div class="ln dim">Program: ${PROGS[pr][0]}. Debate begins…</div>`);
+ ADV.forEach((a,k)=>{if(R.ch[k])L.push(`<div class="ln">${nm(k)} <span class="chg">changed mind</span> now backs ${M(R.fin[k])}</div>`)});
+ L.push(`<div class="ln win">${M(R.win)} carries — ${R.lb(R.me[R.win])}.</div>`);
+ const d=$('#t-debate');d.innerHTML='';let i=0;const dl=$('#fast').checked?30:240;
+ const step=()=>{if(i<L.length){d.insertAdjacentHTML('beforeend',L[i++]);d.scrollTop=1e5;G.tm=setTimeout(step,dl)}else doMove(R.mv[R.win],1)};G.tm=setTimeout(step,200)}
+function newGame(){clearTimeout(G.tm);G={s:init(),turn:+$('#first').value,over:0,last:null,n:0};tab('ballot');$('#t-debate').innerHTML='<p class="note">The council\'s debate appears here on its turn.</p>';render();start()}
+$('#prog').innerHTML=Object.entries(PROGS).map(([k,v])=>`<option value="${k}">${v[0]}</option>`).join('');
+$('#prog').onchange=()=>$('#pd').textContent=PROGS[$('#prog').value][1];$('#prog').onchange();
+$('#nw').onclick=newGame;$('#first').onchange=newGame;
+const root=document.documentElement;
+function setTheme(t){root.setAttribute('data-theme',t);$('#th').textContent=t==='dark'?'☀️ Light':'🌙 Dark';try{localStorage.setItem('shobu-theme',t)}catch(e){}}
+let t0=null;try{t0=localStorage.getItem('shobu-theme')}catch(e){}
+setTheme(t0||(matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light'));
+$('#th').onclick=()=>setTheme(root.getAttribute('data-theme')==='dark'?'light':'dark');
+newGame();
+</script></body></html>
